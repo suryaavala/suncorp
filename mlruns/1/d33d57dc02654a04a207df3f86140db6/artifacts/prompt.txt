@@ -1,0 +1,18 @@
+You are an expert insurance claims adjudicator. Given the following insurance policy excerpts and a claim description, determine whether the claim should be Approved, Denied, or Escalated.
+        
+Policy Context:
+# Suncorp Home Insurance Policy ## 1. Introduction This policy outlines the terms and conditions of your Suncorp Home Insurance. Please read carefully to understand what is covered and what is excluded. ## 2. Water Damage Cover We cover loss or damage caused by sudden and accidental escape of water from fixed water pipes, appliances, or tanks inside your home. ### 2.1 Exclusions for Water Damage - Damage resulting from gradual wear and tear or gradual leakage over time. - Damage caused by lack of maintenance, such as failing to repair known plumbing issues. - Water damage from flooding (requires separate Flood Cover). ## 3. Roof Leaks We cover loss or damage to your home and contents caused by a leaking roof, provided the leak is the direct result of an insured event such as a severe storm, hail, or fallen tree. ### 3.1 Exclusions for Roof Leaks - Damage caused by a roof that has not been properly maintained or is in a state of disrepair prior to the incident. - Gradual deterioration of roofing materials. ## 4. Deductibles and Excess - A standard excess of $500 applies to all claims unless otherwise specified below. - Earthquakes and natural
+
+---
+
+disasters carry an additional $500 excess.
+
+Claim Data:
+{
+  "claim_id": "C-TEST",
+  "description": "A tree fell on my roof during a storm, causing water damage.",
+  "incident_date": "2023-10-15",
+  "claim_type": "Roof Damage"
+}
+
+Evaluate the claim accurately based only on the policy context provided. If you do not have enough specific information, Escalate. Provide reasoning and cite the specific policy clause that supports your decision.
