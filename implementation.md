@@ -19,7 +19,7 @@ We are building a minimal, memory-efficient RAG pipeline for insurance claims ad
   - Generate a file `data/claim_2.json` representing an ambiguous claim that should be escalated.
 - [ ] **Task 3: Vector Store (`src/vector_store.py`)**
   - Initialize a local `chromadb` client.
-  - Write a function to read `data/policy.md`, split it into chunks of 200 words, embed them using the Google GenAI embedding model, and store them in the Chroma collection.
+  - Write a function to read `data/policy.md`, split it into chunks of 200 words, embed them using the `gemini-embedding-001` model, and store them in the Chroma collection.
 - [ ] **Task 4: Adjudication Engine (`src/adjudicator.py`)**
   - Define a Pydantic model `AdjudicationResult` with fields: `decision` (Enum: Approve, Deny, Escalate), `confidence_score` (float), `reasoning` (string), and `cited_policy_clause` (string).
   - Write a function `evaluate_claim(claim_path: str)` that:
