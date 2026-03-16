@@ -21,11 +21,13 @@ def get_chroma_collection():
     return chroma_client.get_collection(name="policy_chunks")
 
 def evaluate_claim(claim_path: str) -> AdjudicationResult:
-    """Evaluates an insurance claim based on the policy manual."""
-    # 1. Load the claim JSON
+    """Evaluates an insurance claim from a JSON file based on the policy manual."""
     with open(claim_path, 'r') as f:
         claim_data = json.load(f)
-    
+    return evaluate_claim_from_dict(claim_data)
+
+def evaluate_claim_from_dict(claim_data: dict) -> AdjudicationResult:
+    """Evaluates an insurance claim from a dictionary based on the policy manual."""
     claim_description = claim_data.get("description", "")
     
     ai_client = genai.Client()
