@@ -1,8 +1,11 @@
 import json
 from enum import Enum
 from pydantic import BaseModel, Field
-import chromadb
+import mlflow
+import json
+import os
 from google import genai
+from src.vector_store import ChromaVectorStore
 
 # Define Data Models
 class Decision(str, Enum):
@@ -16,41 +19,45 @@ class AdjudicationResult(BaseModel):
     reasoning: str
     cited_policy_clause: str
 
-def get_chroma_collection():
-    chroma_client = chromadb.PersistentClient(path="data/chroma_db")
-    return chroma_client.get_collection(name="policy_chunks")
-
-def evaluate_claim(claim_path: str) -> AdjudicationResult:
-    """Evaluates an insurance claim based on the policy manual."""
-    # 1. Load the claim JSON
-    with open(claim_path, 'r') as f:
-        claim_data = json.load(f)
+def evaluate_claim_from_dict(claim_data: dict) -> AdjudicationResult:
+    """Evaluates an insurance claim from a dictionary based on the policy manual, tracked via MLflow."""
+    mlflow.set_experiment("Policy_Adjudication")
     
-    claim_description = claim_data.get("description", "")
-    
-    ai_client = genai.Client()
+    with mlflow.start_run():
+        claim_description = claim_data.get("description", "")
+        
+        ai_client = genai.Client()
+        embedding_model = 'gemini-embedding-001'
+        llm_model = 'gemini-2.5-flash'
+        temperature = 0.0
 
-    # 2. Query the vector store
-    query_embedding_response = ai_client.models.embed_content(
-        model='gemini-embedding-001',
-        contents=claim_description
-    )
-    query_embedding = query_embedding_response.embeddings[0].values
+        # Log parameters
+        mlflow.log_params({
+            "embedding_model": embedding_model,
+            "llm_model": llm_model,
+            "temperature": temperature,
+            "claim_type": claim_data.get("claim_type", "unknown")
+        })
 
-    # Retrieve from chroma
-    collection = get_chroma_collection()
-    results = collection.query(
-        query_embeddings=[query_embedding],
-        n_results=2
-    )
-    
-    # Extract the text chunks
-    retrieved_chunks = results['documents'][0]
-    policy_context = "\n\n---\n\n".join(retrieved_chunks)
+        # 2. Query the vector store
+        query_embedding_response = ai_client.models.embed_content(
+            model=embedding_model,
+            contents=claim_description
+        )
+        query_embedding = query_embedding_response.embeddings[0].values
 
-    # 3. Construct prompt
-    prompt = f"""You are an expert insurance claims adjudicator. Given the following insurance policy excerpts and a claim description, determine whether the claim should be Approved, Denied, or Escalated.
-    
+        # Retrieve from vector store
+        vector_store = ChromaVectorStore()
+        retrieved_chunks = vector_store.query(
+            query_embeddings=[query_embedding],
+            n_results=2
+        )
+        
+        policy_context = "\n\n---\n\n".join(retrieved_chunks)
+
+        # 3. Construct prompt
+        prompt = f"""You are an expert insurance claims adjudicator. Given the following insurance policy excerpts and a claim description, determine whether the claim should be Approved, Denied, or Escalated.
+        
 Policy Context:
 {policy_context}
 
@@ -59,24 +66,40 @@ Claim Data:
 
 Evaluate the claim accurately based only on the policy context provided. If you do not have enough specific information, Escalate. Provide reasoning and cite the specific policy clause that supports your decision.
 """
+        
+        # Save prompt to artifact
+        if not os.path.exists("mlruns_artifacts"):
+            os.makedirs("mlruns_artifacts")
+        with open("mlruns_artifacts/prompt.txt", "w") as f:
+            f.write(prompt)
+        mlflow.log_artifact("mlruns_artifacts/prompt.txt")
 
-    # 4. Call Gemini with Pydantic schema
-    response = ai_client.models.generate_content(
-        model='gemini-2.5-flash',
-        contents=prompt,
-        config={
-            "response_mime_type": "application/json",
-            "response_schema": AdjudicationResult,
-            "temperature": 0.0
-        }
-    )
+        # 4. Call Gemini with Pydantic schema
+        response = ai_client.models.generate_content(
+            model=llm_model,
+            contents=prompt,
+            config={
+                "response_mime_type": "application/json",
+                "response_schema": AdjudicationResult,
+                "temperature": temperature
+            }
+        )
 
-    # Parse JSON back into our model
-    result_dict = json.loads(response.text)
-    return AdjudicationResult(**result_dict)
+        # Parse JSON back into our model
+        result_dict = json.loads(response.text)
+        
+        # Save result to artifact
+        with open("mlruns_artifacts/result.json", "w") as f:
+            json.dump(result_dict, f, indent=2)
+        mlflow.log_artifact("mlruns_artifacts/result.json")
+        
+        return AdjudicationResult(**result_dict)
 
 if __name__ == "__main__":
     import sys
     if len(sys.argv) > 1:
-        res = evaluate_claim(sys.argv[1])
+        claim_path = sys.argv[1]
+        with open(claim_path, 'r') as f:
+            claim_data = json.load(f)
+        res = evaluate_claim_from_dict(claim_data)
         print(res.model_dump_json(indent=2))

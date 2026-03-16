@@ -1,6 +1,40 @@
 import os
+from abc import ABC, abstractmethod
 import chromadb
 from google import genai
+
+class VectorStore(ABC):
+    """Abstract base class for vector storage."""
+    
+    @abstractmethod
+    def add_texts(self, texts: list[str], ids: list[str], metadatas: list[dict]):
+        pass
+        
+    @abstractmethod
+    def query(self, query_embeddings: list[list[float]], n_results: int) -> list[str]:
+        pass
+
+class ChromaVectorStore(VectorStore):
+    """Local ChromaDB implementation of the vector store."""
+    def __init__(self, path: str = "data/chroma_db", collection_name: str = "policy_chunks"):
+        os.makedirs(path, exist_ok=True)
+        self.client = chromadb.PersistentClient(path=path)
+        self.collection = self.client.get_or_create_collection(name=collection_name)
+        
+    def add_texts(self, texts: list[str], ids: list[str], metadatas: list[dict], embeddings: list[list[float]]):
+        self.collection.add(
+            ids=ids,
+            embeddings=embeddings,
+            documents=texts,
+            metadatas=metadatas
+        )
+        
+    def query(self, query_embeddings: list[list[float]], n_results: int = 2) -> list[str]:
+        results = self.collection.query(
+            query_embeddings=query_embeddings,
+            n_results=n_results
+        )
+        return results['documents'][0] if results['documents'] else []
 
 def chunk_text(text: str, chunk_size: int = 200) -> list[str]:
     """Splits text into chunks of roughly `chunk_size` words."""
@@ -21,32 +55,22 @@ def get_gemini_embedding(client: genai.Client, text: str) -> list[float]:
 
 def populate_vector_store():
     """Reads policy, chunks it, embeds it, and stores it in Chroma."""
-    # 1. Read Policy
     with open('data/policy.md', 'r') as f:
         content = f.read()
 
-    # 2. Chunk text
     chunks = chunk_text(content, chunk_size=200)
-
-    # 3. Setup GenAI client
-    # The client automatically picks up GEMINI_API_KEY from environment
     ai_client = genai.Client()
+    vector_store = ChromaVectorStore()
 
-    # 4. Setup ChromaDB
-    os.makedirs('data/chroma_db', exist_ok=True)
-    chroma_client = chromadb.PersistentClient(path="data/chroma_db")
-    collection = chroma_client.get_or_create_collection(name="policy_chunks")
-
-    # 5. Embed and Store
     for i, chunk in enumerate(chunks):
         embedding = get_gemini_embedding(ai_client, chunk)
-        collection.add(
+        vector_store.add_texts(
+            texts=[chunk],
             ids=[f"chunk_{i}"],
-            embeddings=[embedding],
-            documents=[chunk],
+            embeddings=[[embedding]],
             metadatas=[{"source": "data/policy.md", "chunk_index": i}]
         )
-    print(f"Stored {len(chunks)} chunks in ChromaDB.")
+    print(f"Stored {len(chunks)} chunks in Vector Store.")
 
 if __name__ == "__main__":
     populate_vector_store()
