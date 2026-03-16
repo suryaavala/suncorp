@@ -1,11 +1,11 @@
-# GenAI Policy Adjudicator: V2 Enterprise Microservice
+# GenAI Policy Adjudicator: Enterprise Microservice
 
 ## 1. Background and Goal
 Insurance claims processing often suffers from high manual overhead during the initial triage phase, where adjusters must cross-reference unstructured claim reports against dense Product Disclosure Statements (PDS). 
 
 **The Goal:** Build an Enterprise-grade, lightweight, agentic Retrieval-Augmented Generation (RAG) microservice that automatically ingests a claim, retrieves the relevant policy clauses, and outputs a structured adjudication decision (Approve/Deny/Escalate). This prototype demonstrates how to reduce cycle times while maintaining strict explainability guardrails, testing suites, and experiment tracking APIs.
 
-## 2. V2 Enterprise Features
+## 2. Enterprise Features
 * **FastAPI Microservice:** The core adjudication engine is wrapped in a RESTful API (`POST /adjudicate`) allowing seamless integration with core insurance systems.
 * **MLflow Governance:** Every evaluation tracks model versions, parameters, and logs the raw LLM prompts and json results as artifacts for perfect auditability and experiment tracking.
 * **LLM-as-a-Judge Evaluation:** Robust Pytest suite featuring quantitative LLM evaluation tools (`eval_ragas.py`) that strictly assert the agent's logic and citations against the raw claim data.

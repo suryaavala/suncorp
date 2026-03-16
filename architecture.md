@@ -1,7 +1,7 @@
 # Architecture Documentation: Final
 
 ## Overview
-The V2 **GenAI Policy Adjudicator** is a robust, production-ready microservice built in Python. The system processes raw, unstructured claim dictionaries, searches a Vector DB for relevant insurance policy clauses, and orchestrates an LLM to automatically decision the claim.
+The **GenAI Policy Adjudicator** is a robust, production-ready microservice built in Python. The system processes raw, unstructured claim dictionaries, searches a Vector DB for relevant insurance policy clauses, and orchestrates an LLM to automatically decision the claim.
 
 ## Architecture Diagram
 ```mermaid
