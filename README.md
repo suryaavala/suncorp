@@ -14,7 +14,17 @@ Insurance claims processing often suffers from high manual overhead during the i
 ## 3. Structure and Implementation
 The codebase is designed for extreme modularity and local efficiency, avoiding heavy frameworks to maintain full control over the AI pipeline.
 * `requirements.txt`: Minimal dependencies for rapid local execution.
+* `.env`: (User created) Environment file for storing `GEMINI_API_KEY`.
 * `src/mock_data.py`: Generates synthetic PDS markdown files and claim JSONs.
-* `src/vector_store.py`: Handles document chunking and local embedding storage using `chromadb`.
-* `src/adjudicator.py`: The core orchestration script that executes the RAG retrieval and formats the prompt for the LLM.
+* `src/vector_store.py`: Handles document chunking and local embedding storage using `chromadb` and `gemini-embedding-001`.
+* `src/adjudicator.py`: The core orchestration script that executes the RAG retrieval and formats the prompt for the `gemini-2.5-flash` LLM based on a Pydantic schema.
 * `run.py`: The entry point that executes the end-to-end pipeline.
+
+## 4. Execution
+```bash
+python3 -m venv .venv
+source .venv/bin/activate
+pip install -r requirements.txt
+source .env # ensure GEMINI_API_KEY is exported
+python run.py
+```

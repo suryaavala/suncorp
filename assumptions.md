@@ -1,6 +1,6 @@
 # Assumptions & Simplifications (For Local Laptop Execution)
 
-* Compute Offloading: Running a 70B parameter model locally will crash a standard laptop. We will use the Google GenAI SDK (Gemini 3.1 Pro/Flash) via API for all heavy reasoning and embeddings.
+* Compute Offloading: Running a 70B parameter model locally will crash a standard laptop. We will use the Google GenAI SDK (`gemini-2.5-flash` for reasoning and `gemini-embedding-001` for embeddings) via API for all heavy computation.
 
 * Memory-Efficient Storage: We will bypass heavy databases (like Neo4j or Postgres with pgvector) and use chromadb. It runs locally, stores vectors in a lightweight SQLite file, and requires negligible RAM.
 
