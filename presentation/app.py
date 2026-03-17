@@ -54,15 +54,16 @@ if slide == "1. Title":
 
     st.markdown(
         """
-        <div style="text-align: center; padding: 40px 0 10px 0;">
-            <h1 style="font-size: 2.8rem; margin-bottom: 0;">
+        <div style="text-align: center; padding: 60px 0 20px 0;">
+            <h1 style="font-size: 3.2rem; margin-bottom: 0; color: #004647;">
                 GenAI Policy Adjudicator
             </h1>
-            <h2 style="font-size: 1.6rem; border: none; color: #555 !important;
-                        font-weight: 400; margin-top: 8px;">
+            <h2 style="font-size: 1.8rem; border: none; color: #555 !important;
+                        font-weight: 400; margin-top: 10px; border-bottom: none !important;">
                 Automated Claims Triage via Agentic RAG
             </h2>
-            <p style="font-size: 1.1rem; color: #777; margin-top: 24px;">
+            <div style="width: 80px; height: 4px; background-color: #FFCD05; margin: 30px auto;"></div>
+            <p style="font-size: 1.2rem; color: #666; margin-top: 10px; font-weight: 500;">
                 Technical Showcase for Suncorp Data Science & AI
             </p>
         </div>
@@ -126,6 +127,7 @@ elif slide == "2. Background & Goal":
     tab_before, tab_after = st.tabs(["Traditional Triage", "Agentic Triage"])
 
     with tab_before:
+        st.markdown('<div style="margin-top: 20px;"></div>', unsafe_allow_html=True)
         st.info(
             '📧 **Incoming FNOL Email:**\n\n'
             '"Hi, a pipe burst in my ceiling yesterday afternoon and water '
@@ -135,12 +137,13 @@ elif slide == "2. Background & Goal":
             'HOM-2024-98412. Can someone please help? — Sarah M."'
         )
         st.caption(
-            "An adjuster must now manually read the PDS, identify "
+            "⚠️ **The Problem:** An adjuster must now manually read the PDS, identify "
             "covered perils, cross-reference exclusions, and make a "
             "decision — often taking 30+ minutes per claim."
         )
 
     with tab_after:
+        st.markdown('<div style="margin-top: 20px;"></div>', unsafe_allow_html=True)
         st.json(
             {
                 "claim_id": "CLM-1042",
@@ -157,7 +160,7 @@ elif slide == "2. Background & Goal":
             }
         )
         st.caption(
-            "The AI extracts structure in < 3 seconds, cites the exact "
+            "✅ **The Solution:** The AI extracts structure in < 3 seconds, cites the exact "
             "policy clauses, and routes ambiguous claims to a human."
         )
 
@@ -208,6 +211,7 @@ elif slide == "3. Implementation & Architecture":
     )
 
     with tab_code:
+        st.markdown('<div style="margin-top: 20px;"></div>', unsafe_allow_html=True)
         st.code(
             '''
 @app.post("/adjudicate")
@@ -224,6 +228,7 @@ async def adjudicate_claim(request: ClaimRequest):
         )
 
     with tab_prompt:
+        st.markdown('<div style="margin-top: 20px;"></div>', unsafe_allow_html=True)
         st.markdown("**System prompt sent to `gemini-2.5-flash`:**")
         st.code(
             '''
@@ -252,6 +257,7 @@ specific policy clause that supports your decision.
         )
 
     with tab_schema:
+        st.markdown('<div style="margin-top: 20px;"></div>', unsafe_allow_html=True)
         st.markdown(
             "**Pydantic model enforcing structured LLM output "
             "(zero tolerance for hallucinations):**"
