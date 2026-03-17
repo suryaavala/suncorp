@@ -4,11 +4,12 @@ from src.adjudicator import evaluate_claim_from_dict, AdjudicationResult
 
 
 def test_eval_ragas():
+    """Evaluates the adjudicator using an LLM-as-a-judge approach.
+    
+    Runs the adjudicator and uses Gemini to verify whether the cited
+    policy clause logically supports the system's decision.
     """
-    LLM-as-a-judge function that tests if the system output correctly handles Claim 1.
-    Compares against a known 'ground truth' and asserts the cited policy clause.
-    """
-    # 1. Run the system on the claim
+    # 1. Load the claim data
     with open("data/claim_1.json", "r") as f:
         claim_data = json.load(f)
 
