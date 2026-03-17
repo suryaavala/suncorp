@@ -1,24 +1,27 @@
-# GenAI Policy Adjudicator: Automated Claims Triage POC
+# GenAI Policy Adjudicator: Enterprise Microservice
 
 ## 1. Background and Goal
 Insurance claims processing often suffers from high manual overhead during the initial triage phase, where adjusters must cross-reference unstructured claim reports against dense Product Disclosure Statements (PDS). 
 
-**The Goal:** Build a lightweight, agentic Retrieval-Augmented Generation (RAG) system that automatically ingests a claim, retrieves the relevant policy clauses, and outputs a structured adjudication decision (Approve/Deny/Escalate). This prototype demonstrates how to reduce cycle times while maintaining strict explainability guardrails.
+**The Goal:** Build an Enterprise-grade, lightweight, agentic Retrieval-Augmented Generation (RAG) microservice that automatically ingests a claim, retrieves the relevant policy clauses, and outputs a structured adjudication decision (Approve/Deny/Escalate). This prototype demonstrates how to reduce cycle times while maintaining strict explainability guardrails, testing suites, and experiment tracking APIs.
 
-## 2. Project Outcomes
-* **Automated Reasoning:** The system successfully evaluates claims against synthetic policy rules with high accuracy.
-* **Explainability Trace:** Every AI decision outputs a JSON payload containing the exact policy text cited, ensuring the reasoning is fully auditable.
-* **Confidence Guardrails:** The model returns a confidence score. Claims falling into "gray areas" are automatically flagged for Human-in-the-Loop (HITL) review, preventing autonomous hallucinations on complex claims.
-* **Future Improvements:** To transition this from a POC to "scalable, production-grade solutions embedded in core systems", the local `chromadb` would be migrated to Databricks Vector Search, and the execution logic would be wrapped in a serverless API (e.g., FastAPI on Cloud Run).
+## 2. Enterprise Features
+* **FastAPI Microservice:** The core adjudication engine is wrapped in a RESTful API (`POST /adjudicate`) allowing seamless integration with core insurance systems.
+* **MLflow Governance:** Every evaluation tracks model versions, parameters, and logs the raw LLM prompts and json results as artifacts for perfect auditability and experiment tracking.
+* **LLM-as-a-Judge Evaluation:** Robust Pytest suite featuring quantitative LLM evaluation tools (`eval_ragas.py`) that strictly assert the agent's logic and citations against the raw claim data.
+* **CI/CD Automation:** A GitHub Actions pipeline guarantees code quality and logic preservation across all future PRs.
+* **Abstract Data Layer:** The vector store utilizes the Strategy Pattern, allowing the local `ChromaDB` logic to be hot-swapped for a Databricks Vector Search implementation in the future.
 
 ## 3. Structure and Implementation
-The codebase is designed for extreme modularity and local efficiency, avoiding heavy frameworks to maintain full control over the AI pipeline.
-* `requirements.txt`: Minimal dependencies for rapid local execution.
+The codebase is designed for extreme modularity and scalability.
+* `requirements.txt`: Dependencies for the API, ML Tracking, and Testing framework.
 * `.env`: (User created) Environment file for storing `GEMINI_API_KEY`.
+* `src/api.py`: FastAPI endpoints for health monitoring and claim adjudication processing.
+* `src/adjudicator.py`: The core orchestration script pulling vectors, executing Gemini with Pydantic structured schemas, and tracking metrics in MLflow.
+* `src/vector_store.py`: Abstract Base Class for ChromaDB local storage of Gemini text embeddings.
 * `src/mock_data.py`: Generates synthetic PDS markdown files and claim JSONs.
-* `src/vector_store.py`: Handles document chunking and local embedding storage using `chromadb` and `gemini-embedding-001`.
-* `src/adjudicator.py`: The core orchestration script that executes the RAG retrieval and formats the prompt for the `gemini-2.5-flash` LLM based on a Pydantic schema.
-* `run.py`: The entry point that executes the end-to-end pipeline.
+* `tests/`: Contains `pytest` files for API validation, LLM-as-a-judge quantitative validation, and mocking tools for timeout handling.
+* `run.py`: The Uvicorn entry point that starts the local API server and initializes dummy data.
 
 ## 4. Execution
 ```bash
@@ -27,4 +30,11 @@ source .venv/bin/activate
 pip install -r requirements.txt
 source .env # ensure GEMINI_API_KEY is exported
 python run.py
+```
+After running the script, the Uvicorn server will host the API on port 8000. 
+You can test the endpoint using `curl`:
+```bash
+curl -X POST http://localhost:8000/adjudicate \
+     -H "Content-Type: application/json" \
+     -d @data/claim_1.json
 ```
