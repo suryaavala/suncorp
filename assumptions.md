@@ -4,6 +4,8 @@
 
 * Memory-Efficient Storage: We will bypass heavy databases (like Neo4j or Postgres with pgvector) and use chromadb. It runs locally, stores vectors in a lightweight SQLite file, and requires negligible RAM.
 
+* Vector Search Platform: We are utilizing a local ChromaDB instance to act as a placeholder for an enterprise vector database (like Databricks Vector Search). The abstract base classes implemented in `VectorStore` make hot-swapping this component trivial when migrating to the cloud.
+
 * Synthetic Data: Rather than setting up complex data pipelines, we will use a Python script to generate a synthetic Markdown policy document and JSON claim files.
 
 * Framework Minimalism: We will avoid bloated frameworks like LangChain. Writing raw API calls and orchestration logic directly demonstrates "strong Python programming skills" and proves you understand the underlying mechanics of the pipeline.

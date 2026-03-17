@@ -1,10 +1,11 @@
 import os
 import json
 
+
 def generate_mock_data():
     """Generates synthetic insurance policy and claim files."""
-    os.makedirs('data', exist_ok=True)
-    
+    os.makedirs("data", exist_ok=True)
+
     # 1. Generate Policy Document
     policy_content = """# Suncorp Home Insurance Policy
 
@@ -30,30 +31,31 @@ We cover loss or damage to your home and contents caused by a leaking roof, prov
 - A standard excess of $500 applies to all claims unless otherwise specified below.
 - Earthquakes and natural disasters carry an additional $500 excess.
 """
-    with open('data/policy.md', 'w') as f:
+    with open("data/policy.md", "w") as f:
         f.write(policy_content)
-        
+
     # 2. Generate Claim 1 (Clear-cut Appproved Claim)
     claim_1 = {
         "claim_id": "C-1001",
         "description": "During a severe thunderstorm yesterday, a large tree branch fell onto my roof, causing a sudden and significant leak. Water poured into the living room, damaging the ceiling and floor.",
         "incident_date": "2023-10-15",
-        "claim_type": "Roof Leak and Water Damage"
+        "claim_type": "Roof Leak and Water Damage",
     }
-    with open('data/claim_1.json', 'w') as f:
+    with open("data/claim_1.json", "w") as f:
         json.dump(claim_1, f, indent=4)
-        
+
     # 3. Generate Claim 2 (Ambiguous/Escalated Claim)
     claim_2 = {
         "claim_id": "C-1002",
         "description": "I noticed some water damage on the bathroom ceiling. Looks like the pipes might have been slowly dripping for a few months, and now the drywall is ruined. I need it fixed.",
         "incident_date": "Uncertain, noticed 2023-11-01",
-        "claim_type": "Water Damage"
+        "claim_type": "Water Damage",
     }
-    with open('data/claim_2.json', 'w') as f:
+    with open("data/claim_2.json", "w") as f:
         json.dump(claim_2, f, indent=4)
-        
+
     print("Mock data generated successfully in data/")
+
 
 if __name__ == "__main__":
     generate_mock_data()
