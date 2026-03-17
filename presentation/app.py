@@ -28,7 +28,7 @@ if css_path.exists():
 ASSETS = Path(__file__).parent / "assets"
 
 # ── Sidebar Navigation ──────────────────────────────────────────
-st.sidebar.markdown("## ⚡ Suncorp Tech Showcase")
+st.sidebar.markdown("## ⚡ AI Tech Showcase")
 st.sidebar.markdown("---")
 
 slide = st.sidebar.radio(
@@ -55,16 +55,16 @@ if slide == "1. Title":
     st.markdown(
         """
         <div style="text-align: center; padding: 60px 0 20px 0;">
-            <h1 style="font-size: 3.2rem; margin-bottom: 0; color: #004647;">
+            <h1 style="font-size: 3.2rem; margin-bottom: 0; color: #c9d1d9;">
                 GenAI Policy Adjudicator
             </h1>
-            <h2 style="font-size: 1.8rem; border: none; color: #555 !important;
+            <h2 style="font-size: 1.8rem; border: none; color: #8b949e !important;
                         font-weight: 400; margin-top: 10px; border-bottom: none !important;">
                 Automated Claims Triage via Agentic RAG
             </h2>
-            <div style="width: 80px; height: 4px; background-color: #FFCD05; margin: 30px auto;"></div>
-            <p style="font-size: 1.2rem; color: #666; margin-top: 10px; font-weight: 500;">
-                Technical Showcase for Suncorp Data Science & AI
+            <div style="width: 80px; height: 4px; background-color: #58a6ff; margin: 30px auto;"></div>
+            <p style="font-size: 1.2rem; color: #8b949e; margin-top: 10px; font-weight: 500;">
+                Technical Showcase for AI Engineering
             </p>
         </div>
         """,
@@ -316,10 +316,11 @@ elif slide == "4. Project Outcomes":
         y="Confidence Score",
         color="Routing",
         color_discrete_map={
-            "Automated (STP)": "#004647",
-            "Escalated (HITL)": "#FFCD05",
+            "Automated (STP)": "#3fb950",  # GitHub Green
+            "Escalated (HITL)": "#f78166", # GitHub Orange
         },
         title="AI Confidence vs. Claim Routing Decision",
+        template="plotly_dark",
     )
 
     fig.add_hline(
