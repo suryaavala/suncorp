@@ -1,10 +1,11 @@
 from fastapi import FastAPI, HTTPException
-from pydantic import BaseModel, Field
-import json
+from pydantic import BaseModel
+from google.genai.errors import APIError
 
 from src.adjudicator import evaluate_claim_from_dict, AdjudicationResult
 
 app = FastAPI(title="GenAI Policy Adjudicator API", version="1.0.0")
+
 
 class ClaimRequest(BaseModel):
     claim_id: str
@@ -12,8 +13,9 @@ class ClaimRequest(BaseModel):
     incident_date: str
     claim_type: str
 
+
 @app.post("/adjudicate", response_model=AdjudicationResult)
-async def adjudicate_claim(claim: ClaimRequest):
+async def adjudicate_claim(claim: ClaimRequest) -> AdjudicationResult:
     """
     Evaluates an insurance claim and returns the adjudication decision.
     """
@@ -21,11 +23,16 @@ async def adjudicate_claim(claim: ClaimRequest):
         claim_dict = claim.model_dump()
         result = evaluate_claim_from_dict(claim_dict)
         return result
+    except APIError as e:
+        # Handle specific GenAI API timeouts/errors
+        raise HTTPException(status_code=503, detail=f"LLM Provider Error: {str(e)}")
     except Exception as e:
-        raise HTTPException(status_code=500, detail=str(e))
+        # Generic catch-all for local processing or dict parsing errors
+        raise HTTPException(status_code=500, detail=f"Internal Server Error: {str(e)}")
+
 
 @app.get("/health")
-async def health_check():
+async def health_check() -> dict:
     """
     Infrastructure monitoring endpoint.
     """
