@@ -6,6 +6,7 @@ import json
 import os
 from google import genai
 from src.vector_store import ChromaVectorStore
+from src.reranker import rerank_chunks
 
 # Define Data Models
 class Decision(str, Enum):
@@ -46,14 +47,17 @@ def evaluate_claim_from_dict(claim_data: dict) -> AdjudicationResult:
         )
         query_embedding = query_embedding_response.embeddings[0].values
 
-        # Retrieve from vector store
+        # Retrieve broader context (top 10) from vector store
         vector_store = ChromaVectorStore()
-        retrieved_chunks = vector_store.query(
+        retrieved_chunks_top10 = vector_store.query(
             query_embeddings=[query_embedding],
-            n_results=2
+            n_results=10
         )
         
-        policy_context = "\n\n---\n\n".join(retrieved_chunks)
+        # Re-rank to get the top 2 most relevant chunks
+        top_2_chunks = rerank_chunks(query=claim_description, chunks=retrieved_chunks_top10, top_k=2)
+        
+        policy_context = "\n\n---\n\n".join(top_2_chunks)
 
         # 3. Construct prompt
         prompt = f"""You are an expert insurance claims adjudicator. Given the following insurance policy excerpts and a claim description, determine whether the claim should be Approved, Denied, or Escalated.
