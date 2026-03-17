@@ -24,26 +24,60 @@ css_path = Path(__file__).parent / ".style.css"
 if css_path.exists():
     st.markdown(f"<style>{css_path.read_text()}</style>", unsafe_allow_html=True)
 
-# ── Assets Path ──────────────────────────────────────────────────
-ASSETS = Path(__file__).parent / "assets"
-
-# ── Sidebar Navigation ──────────────────────────────────────────
-st.sidebar.markdown("## ⚡ Suncorp Tech Showcase")
-st.sidebar.markdown("---")
-
-slide = st.sidebar.radio(
-    "Navigation",
-    [
-        "1. Title",
-        "2. Background & Goal",
-        "3. Retrieval & Re-ranking Deep Dive",
-        "4. Implementation & Architecture",
-        "5. Project Outcomes",
-        "6. Future State",
-    ],
-    label_visibility="collapsed",
+# ── Sticky Top Navbar ──────────────────────────────────────────
+# Inject Glassmorphism Container + Scroll Listener
+st.markdown(
+    """
+    <div id="sticky-nav" class="nav-container">
+        <div class="nav-logo">⚡ Suncorp Tech Showcase</div>
+    </div>
+    <script>
+        const nav = window.parent.document.querySelector('.nav-container');
+        window.parent.addEventListener('scroll', () => {
+            if (window.parent.scrollY > 50) {
+                nav.classList.add('scrolled');
+            } else {
+                nav.classList.remove('scrolled');
+            }
+        });
+    </script>
+    """,
+    unsafe_allow_html=True
 )
 
+SLIDES = [
+    "1. Title",
+    "2. Background & Goal",
+    "3. Exploratory Data Analysis",
+    "4. Retrieval & Re-ranking Deep Dive",
+    "5. Implementation & Architecture",
+    "6. Project Outcomes",
+    "7. Future State",
+]
+
+# Initialize slide state
+if "current_slide" not in st.session_state:
+    st.session_state.current_slide = SLIDES[0]
+
+# Navigation Buttons (Positioned to align with the nav-container)
+# Using a unique prefix 'navbar_btn_v2_' to avoid any cached key conflicts
+nav_cols = st.columns([1.5] + [1] * (len(SLIDES) - 1))
+for i, s in enumerate(SLIDES):
+    with nav_cols[i]:
+        label = s.split(". ")[1] if ". " in s else s
+        if st.button(
+            label, 
+            key=f"navbar_btn_v3_{i}", 
+            use_container_width=True,
+            type="primary" if st.session_state.current_slide == s else "secondary"
+        ):
+            st.session_state.current_slide = s
+            st.rerun()
+
+slide = st.session_state.current_slide
+
+# ── Assets Path ──────────────────────────────────────────────────
+ASSETS = Path(__file__).parent / "assets"
 
 # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 # SLIDE 1: Title
@@ -63,9 +97,9 @@ if slide == "1. Title":
                         font-weight: 400; margin-top: 10px; border-bottom: none !important;">
                 Automated Claims Triage via Agentic RAG
             </h2>
-            <div style="width: 80px; height: 4px; background-color: #58a6ff; margin: 30px auto;"></div>
+            <div style="width: 80px; height: 4px; background-color: #FECB00; margin: 30px auto;"></div>
             <p style="font-size: 1.2rem; color: #8b949e; margin-top: 10px; font-weight: 500;">
-                Technical Showcase for AI Engineering
+                Technical Showcase for Suncorp Data Science & AI
             </p>
         </div>
         """,
@@ -167,9 +201,72 @@ elif slide == "2. Background & Goal":
 
 
 # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-# SLIDE 3: Retrieval & Re-ranking Deep Dive
+# SLIDE 3: Exploratory Data Analysis
 # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-elif slide == "3. Retrieval & Re-ranking Deep Dive":
+elif slide == "3. Exploratory Data Analysis":
+    st.title("Exploratory Data Analysis")
+    st.markdown("---")
+
+    st.markdown(
+        "Explore the raw data foundations of the GenAI Policy Adjudicator. "
+        "This slide showcases the input policy documentation, raw claim data, "
+        "and the structured prompts that drive the decision engine."
+    )
+
+    tab_policy, tab_claim, tab_prompts = st.tabs(
+        ["📄 Policy Document", "📥 Raw Claim Data", "🤖 System Prompts"]
+    )
+
+    with tab_policy:
+        st.markdown("### `data/policy.md` (Source of Truth)")
+        # Path is relative to presentation/app.py -> data/policy.md
+        policy_path = Path(__file__).parent.parent / "data" / "policy.md"
+        if policy_path.exists():
+            st.code(policy_path.read_text(), language="markdown")
+        else:
+            st.error(f"Policy document not found at {policy_path}")
+        st.caption("This unstructured markdown is chunked and indexed into the vector database.")
+
+    with tab_claim:
+        st.markdown("### Sample Claim JSON")
+        claim_data = {
+            "claim_id": "CLM-2024-X1",
+            "policy_holder": "John Doe",
+            "incident_description": "During a heavy rainstorm, water started leaking from the kitchen ceiling. A plumber found a burst pipe in the wall.",
+            "damage_estimate": 4500.00,
+            "metadata": {"peril": "Water Damage", "source": "Mobile App"}
+        }
+        st.json(claim_data)
+        st.caption("Raw input received by the API from FNOL sources.")
+
+    with tab_prompts:
+        st.markdown("### The Adjudication Prompt")
+        st.code(
+            """
+SYSTEM_PROMPT = \"\"\"
+You are a Suncorp Claims Adjuster AI.
+Analyze the following CLAIM against the provided POLICY fragments.
+BE STRICT: Only approve if the policy explicitly covers the peril.
+CITATIONS REQUIRED: You must cite the exact section number.
+
+# POLICY FRAGMENTS
+{context}
+
+# CLAIM DATA
+{claim_json}
+
+Return output as valid JSON matching AdjudicationResult schema.
+\"\"\"
+            """,
+            language="python"
+        )
+        st.caption("The instruction set that constrains LLM behavior and prevents hallucinations.")
+
+
+# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+# SLIDE 4: Retrieval & Re-ranking Deep Dive
+# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+elif slide == "4. Retrieval & Re-ranking Deep Dive":
     st.title("Retrieval & Re-ranking Deep Dive")
     st.markdown("---")
 
@@ -219,9 +316,9 @@ elif slide == "3. Retrieval & Re-ranking Deep Dive":
 
 
 # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-# SLIDE 4: Implementation & Architecture
+# SLIDE 5: Implementation & Architecture
 # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-elif slide == "4. Implementation & Architecture":
+elif slide == "5. Implementation & Architecture":
     st.title("Implementation & Architecture")
     st.markdown("---")
 
@@ -335,9 +432,9 @@ class AdjudicationResult(BaseModel):
 
 
 # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-# SLIDE 5: Project Outcomes
+# SLIDE 6: Project Outcomes
 # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-elif slide == "5. Project Outcomes":
+elif slide == "6. Project Outcomes":
     st.title("Project Outcomes")
     st.markdown("---")
 
@@ -369,8 +466,8 @@ elif slide == "5. Project Outcomes":
         y="Confidence Score",
         color="Routing",
         color_discrete_map={
-            "Automated (STP)": "#3fb950",  # GitHub Green
-            "Escalated (HITL)": "#f78166", # GitHub Orange
+            "Automated (STP)": "#009877",  # Suncorp Green Haze
+            "Escalated (HITL)": "#FECB00", # Suncorp Supernova
         },
         title="AI Confidence vs. Claim Routing Decision",
         template="plotly_dark",
@@ -433,9 +530,9 @@ elif slide == "5. Project Outcomes":
 
 
 # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-# SLIDE 6: Future State & Scaling
+# SLIDE 7: Future State & Scaling
 # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-elif slide == "6. Future State":
+elif slide == "7. Future State":
     st.title("Future State & Scaling")
     st.markdown("---")
 

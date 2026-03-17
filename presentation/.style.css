@@ -1,4 +1,4 @@
-/* GitHub Soft Dark Theme for Streamlit Presentation Deck */
+/* GitHub Soft Dark Theme + Suncorp Brand Accents */
 
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
 
@@ -6,6 +6,7 @@
 #MainMenu {visibility: hidden;}
 footer {visibility: hidden;}
 header {visibility: hidden;}
+[data-testid="stSidebar"] {display: none;} /* Hide sidebar since we're moving to top nav */
 
 /* ── Global Styles ── */
 .stApp {
@@ -13,7 +14,73 @@ header {visibility: hidden;}
     font-family: 'Inter', -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, sans-serif !important;
 }
 
-/* ── Typography ── */
+/* ── Sticky Top Navbar ── */
+.nav-container {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 60px; /* Slimmer by default */
+    background: rgba(13, 17, 23, 0.7); 
+    backdrop-filter: blur(15px);
+    -webkit-backdrop-filter: blur(15px);
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    padding: 0 5%;
+    z-index: 999999;
+    border-bottom: 1px solid rgba(48, 54, 61, 0.5);
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Make the Streamlit columns row sticky too */
+/* We target the div that follows our custom nav-container */
+div:has(> #sticky-nav) + div {
+    position: fixed;
+    top: 0;
+    left: 18%; /* Offset for logo */
+    right: 5%;
+    height: 60px;
+    z-index: 1000000;
+    display: flex;
+    align-items: center;
+}
+
+.nav-container.scrolled {
+    background: rgba(22, 27, 34, 0.95);
+    border-bottom: 2px solid #009877;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
+}
+
+.nav-logo {
+    font-weight: 800;
+    font-size: clamp(1rem, 2vw, 1.3rem); /* Fluid typography */
+    color: #009877; 
+    white-space: nowrap;
+    margin-right: 2rem;
+}
+
+/* ── Fluid Layout Adjustments ── */
+div.block-container {
+    padding-top: 110px !important;
+    padding-left: 5% !important;
+    padding-right: 5% !important;
+    max-width: 1400px;
+    margin: 0 auto;
+}
+
+/* Responsive Scaling for Small Windows */
+@media (max-width: 1200px) {
+    .nav-logo { display: none; } /* Hide logo to save space for buttons */
+    div.block-container { padding-top: 90px !important; }
+}
+
+@media (max-width: 768px) {
+    h1 { font-size: 2rem !important; }
+    h2 { font-size: 1.4rem !important; }
+    .stButton button { font-size: 0.7rem !important; padding: 4px 8px !important; }
+}
+
 h1 {
     color: #c9d1d9 !important;
     font-weight: 700 !important;
@@ -24,7 +91,7 @@ h1 {
 h2 {
     color: #c9d1d9 !important;
     font-weight: 600 !important;
-    border-bottom: 2px solid #58a6ff;
+    border-bottom: 2px solid #009877; /* Suncorp Green Haze */
     padding-bottom: 8px;
     margin-top: 1.5rem !important;
 }
@@ -37,36 +104,6 @@ h3 {
 
 p, li, .stMarkdown {
     color: #8b949e !important;
-}
-
-/* ── Sidebar Styling ── */
-[data-testid="stSidebar"] {
-    background-color: #161b22 !important;
-    border-right: 1px solid #30363d;
-}
-
-[data-testid="stSidebar"] * {
-    color: #c9d1d9 !important;
-}
-
-[data-testid="stSidebar"] .stRadio label {
-    color: #c9d1d9 !important;
-    font-size: 0.95rem;
-    font-weight: 500;
-    padding: 6px 12px;
-    border-radius: 6px;
-    margin: 2px 0;
-    transition: all 0.2s ease;
-}
-
-/* Active radio button highlight */
-[data-testid="stSidebar"] .stRadio div[role="radiogroup"] label[data-baseweb="radio"]:has(input:checked) {
-    background-color: rgba(88, 166, 255, 0.15) !important;
-}
-
-[data-testid="stSidebar"] .stRadio div[role="radiogroup"] label[data-baseweb="radio"]:has(input:checked) * {
-    color: #58a6ff !important;
-    font-weight: 600 !important;
 }
 
 /* ── Tabs Styling (The "Depth" Fix) ── */
@@ -92,14 +129,14 @@ button[data-baseweb="tab"][aria-selected="true"] {
     color: #c9d1d9 !important;
     font-weight: 600 !important;
     border: 1px solid #30363d !important;
-    border-bottom: 2px solid #f78166 !important; /* GitHub Orange accent for active tab */
+    border-bottom: 2px solid #FECB00 !important; /* Suncorp Supernova Yellow accent */
 }
 
 /* ── Metric & Card Styling ── */
 [data-testid="stMetric"] {
     background-color: #161b22;
     border: 1px solid #30363d;
-    border-left: 5px solid #3fb950; /* Green highlight for metrics */
+    border-left: 5px solid #009877; /* Suncorp Green highlight */
     padding: 1.25rem;
     border-radius: 6px;
     box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
@@ -145,7 +182,7 @@ button[data-baseweb="tab"][aria-selected="true"] {
 }
 
 .streamlit-expanderHeader:hover {
-    border-color: #58a6ff !important;
+    border-color: #009877 !important;
 }
 
 /* ── Code Blocks ── */
@@ -160,6 +197,15 @@ button[data-baseweb="tab"][aria-selected="true"] {
     background-color: #161b22 !important;
     border: 1px solid #30363d !important;
     color: #c9d1d9 !important;
+}
+
+/* ── Image Presentation Fix (White BG popped onto Dark App) ── */
+[data-testid="stImage"] {
+    background-color: #ffffff;
+    padding: 10px;
+    border-radius: 8px;
+    border: 1px solid #30363d;
+    margin-bottom: 20px;
 }
 
 /* ── Custom HTML overrides ── */
