@@ -1,0 +1,105 @@
+/* Suncorp Brand Theme for Streamlit Presentation Deck */
+/* Cyprus Green: #004647 | Supernova Yellow: #FFCD05 */
+
+/* ── Hide Default Streamlit Chrome ── */
+#MainMenu {visibility: hidden;}
+footer {visibility: hidden;}
+header {visibility: hidden;}
+
+/* ── Global Background ── */
+.stApp {
+    background-color: #F4F5F7;
+}
+
+/* ── Typography ── */
+h1 {
+    color: #004647 !important;
+    font-weight: 700 !important;
+    letter-spacing: -0.5px;
+}
+
+h2 {
+    color: #004647 !important;
+    font-weight: 600 !important;
+    border-bottom: 3px solid #FFCD05;
+    padding-bottom: 8px;
+}
+
+h3 {
+    color: #004647 !important;
+    font-weight: 500 !important;
+}
+
+/* ── Sidebar Styling ── */
+[data-testid="stSidebar"] {
+    background-color: #004647 !important;
+}
+
+[data-testid="stSidebar"] * {
+    color: #FFFFFF !important;
+}
+
+[data-testid="stSidebar"] .stRadio label {
+    color: #FFFFFF !important;
+    font-size: 1.05rem;
+    padding: 4px 0;
+}
+
+[data-testid="stSidebar"] .stRadio [data-testid="stMarkdownContainer"] p {
+    color: #FFFFFF !important;
+}
+
+/* Active radio button highlight */
+[data-testid="stSidebar"] .stRadio div[role="radiogroup"] label[data-baseweb="radio"]:has(input:checked) {
+    background-color: rgba(255, 205, 5, 0.15);
+    border-radius: 6px;
+    padding-left: 8px;
+}
+
+/* ── Metric Cards ── */
+[data-testid="stMetric"] {
+    background-color: #FFFFFF;
+    border: 1px solid #E0E0E0;
+    border-left: 4px solid #FFCD05;
+    padding: 16px;
+    border-radius: 8px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+}
+
+[data-testid="stMetric"] label {
+    color: #004647 !important;
+    font-weight: 600 !important;
+}
+
+/* ── Expander Styling ── */
+.streamlit-expanderHeader {
+    background-color: #004647 !important;
+    color: #FFFFFF !important;
+    border-radius: 6px;
+    font-weight: 600;
+}
+
+/* ── Code Blocks ── */
+.stCodeBlock {
+    border: 1px solid #004647;
+    border-radius: 6px;
+}
+
+/* ── Divider Accent ── */
+hr {
+    border-top: 2px solid #FFCD05 !important;
+}
+
+/* ── Button Accents ── */
+.stButton > button {
+    background-color: #FFCD05 !important;
+    color: #004647 !important;
+    font-weight: 600 !important;
+    border: none !important;
+    border-radius: 6px !important;
+}
+
+.stButton > button:hover {
+    background-color: #E6B800 !important;
+    color: #004647 !important;
+}
