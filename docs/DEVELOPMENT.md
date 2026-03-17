@@ -2,7 +2,7 @@
 
 This document is the definitive guide for operating, observing, debugging, and tuning the **GenAI Policy Adjudicator** microservice. It is written for competent Python developers who may be new to this specific domain (LLMs, RAG pipelines, and this repository's architecture).
 
-For a high-level overview, see [README.md](README.md).
+For a high-level overview, see [README.md](../README.md).
 
 ---
 

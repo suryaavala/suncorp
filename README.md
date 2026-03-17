@@ -5,7 +5,7 @@ Insurance claims processing often suffers from high manual overhead during the i
 
 **The Goal:** Build an Enterprise-grade, lightweight, agentic Retrieval-Augmented Generation (RAG) microservice that automatically ingests a claim, retrieves the relevant policy clauses, and outputs a structured adjudication decision (Approve/Deny/Escalate). This prototype demonstrates how to reduce cycle times while maintaining strict explainability guardrails, testing suites, and experiment tracking APIs.
 
-> For detailed architectural overviews, debugging, and dashboard access, please see [DEVELOPMENT.md](DEVELOPMENT.md).
+> For detailed architectural overviews, debugging, and dashboard access, please see [DEVELOPMENT.md](docs/DEVELOPMENT.md).
 
 ## 2. Enterprise Features
 * **FastAPI Microservice:** The core adjudication engine is wrapped in a RESTful API (`POST /adjudicate`) allowing seamless integration with core insurance systems.
