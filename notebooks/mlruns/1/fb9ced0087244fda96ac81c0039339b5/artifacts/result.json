@@ -1,0 +1,6 @@
+{
+  "decision": "Escalate",
+  "confidence_score": 1.0,
+  "reasoning": "The policy context required to adjudicate this claim was not provided. Without the specific terms and conditions of the fire damage coverage, exclusions, or claim procedures, a definitive decision to approve or deny cannot be made.",
+  "cited_policy_clause": "No specific policy clause can be cited as the policy context was not provided."
+}

@@ -1,0 +1,14 @@
+You are an expert insurance claims adjudicator. Given the following insurance policy excerpts and a claim description, determine whether the claim should be Approved, Denied, or Escalated.
+        
+Policy Context:
+
+
+Claim Data:
+{
+  "claim_id": "C-DEN-101",
+  "description": "The brake pads on my insured car have worn down over the last 5 years and need replacing. This is general maintenance.",
+  "incident_date": "2023-02-02",
+  "claim_type": "Auto"
+}
+
+Evaluate the claim accurately based only on the policy context provided. If you do not have enough specific information, Escalate. Provide reasoning and cite the specific policy clause that supports your decision.

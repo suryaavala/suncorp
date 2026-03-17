@@ -1,0 +1,6 @@
+{
+  "decision": "Escalate",
+  "confidence_score": 0.9,
+  "reasoning": "The claim describes a fire incident causing damage to the insured home. However, no insurance policy excerpts were provided to evaluate coverage details, exclusions, or conditions. Without the policy context, it is impossible to determine if the claim meets the criteria for approval or denial.",
+  "cited_policy_clause": "No policy clauses can be cited as the policy context was not provided."
+}

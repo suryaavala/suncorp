@@ -1,0 +1,6 @@
+{
+  "decision": "Escalate",
+  "confidence_score": 1,
+  "reasoning": "The policy context is empty, preventing a proper evaluation of the claim against specific coverage terms, exclusions, or conditions. Without policy details, it is impossible to determine if the fire damage is covered or excluded.",
+  "cited_policy_clause": "Policy context missing"
+}
