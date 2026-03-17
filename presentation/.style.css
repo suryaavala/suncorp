@@ -1,0 +1,238 @@
+/* GitHub Soft Dark Theme + Suncorp Brand Accents */
+
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+
+/* ── Hide Default Streamlit Chrome ── */
+#MainMenu {visibility: hidden;}
+footer {visibility: hidden;}
+[data-testid="stSidebar"] {display: none;}
+
+/* ── Global Styles ── */
+.stApp {
+    background-color: #0d1117;
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, sans-serif !important;
+}
+
+/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+   STICKY NAVBAR — built from the Streamlit header element
+   We UN-hide the header token and restyle it as a glassmorphism bar.
+   The st.radio(horizontal) sits inside it naturally.
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+header[data-testid="stHeader"] {
+    visibility: visible !important;
+    background: rgba(13, 17, 23, 0.88) !important;
+    backdrop-filter: blur(20px) !important;
+    -webkit-backdrop-filter: blur(20px) !important;
+    border-bottom: 1px solid rgba(48, 54, 61, 0.6) !important;
+    box-shadow: 0 4px 24px rgba(0, 0, 0, 0.35) !important;
+    height: 64px !important;
+    z-index: 999999 !important;
+}
+
+/* ── Radio widget → horizontal nav links ── */
+/* The radio group container */
+[data-testid="stRadio"] > div {
+    display: flex !important;
+    flex-direction: row !important;
+    align-items: center !important;
+    justify-content: center !important;
+    gap: 0 !important;
+    flex-wrap: nowrap !important;
+}
+
+/* Each radio option */
+[data-testid="stRadio"] > div > label {
+    background: transparent !important;
+    border: none !important;
+    color: #8b949e !important;
+    font-weight: 600 !important;
+    font-size: 0.82rem !important;
+    text-transform: uppercase !important;
+    letter-spacing: 0.8px !important;
+    padding: 8px 18px !important;
+    margin: 0 !important;
+    cursor: pointer !important;
+    transition: color 0.2s, background 0.2s !important;
+    white-space: nowrap !important;
+    border-radius: 6px !important;
+    position: relative !important;
+}
+
+[data-testid="stRadio"] > div > label:hover {
+    color: #c9d1d9 !important;
+    background: rgba(201, 209, 217, 0.08) !important;
+}
+
+/* Selected / active radio option */
+[data-testid="stRadio"] > div > label:has(input:checked) {
+    color: #009877 !important;
+    font-weight: 700 !important;
+    background: rgba(0, 152, 119, 0.1) !important;
+}
+
+/* Green underline indicator on the active item */
+[data-testid="stRadio"] > div > label:has(input:checked)::after {
+    content: '';
+    position: absolute;
+    bottom: 2px;
+    left: 20%;
+    width: 60%;
+    height: 3px;
+    background: #009877;
+    border-radius: 2px;
+}
+
+/* Hide the actual radio circle */
+[data-testid="stRadio"] input[type="radio"] {
+    display: none !important;
+}
+
+/* ── Fluid Layout ── */
+div.block-container {
+    padding-top: 90px !important;
+    padding-left: 5% !important;
+    padding-right: 5% !important;
+    max-width: 1400px;
+    margin: 0 auto;
+}
+
+@media (max-width: 768px) {
+    [data-testid="stRadio"] > div > label {
+        font-size: 0.7rem !important;
+        padding: 6px 10px !important;
+    }
+}
+
+h1 {
+    color: #c9d1d9 !important;
+    font-weight: 700 !important;
+    letter-spacing: -1px;
+    margin-bottom: 0.5rem !important;
+}
+
+h2 {
+    color: #c9d1d9 !important;
+    font-weight: 600 !important;
+    border-bottom: 2px solid #009877; /* Suncorp Green Haze */
+    padding-bottom: 8px;
+    margin-top: 1.5rem !important;
+}
+
+h3 {
+    color: #c9d1d9 !important;
+    font-weight: 600 !important;
+    font-size: 1.25rem !important;
+}
+
+p, li, .stMarkdown {
+    color: #8b949e !important;
+}
+
+/* ── Tabs Styling (The "Depth" Fix) ── */
+button[data-baseweb="tab"] {
+    border-radius: 6px 6px 0 0 !important;
+    padding: 10px 20px !important;
+    background-color: #0d1117 !important;
+    margin-right: 4px !important;
+    color: #8b949e !important;
+    font-weight: 500 !important;
+    border: 1px solid transparent !important;
+    border-bottom: 2px solid #30363d !important;
+}
+
+button[data-baseweb="tab"]:hover {
+    color: #c9d1d9 !important;
+    background-color: #161b22 !important;
+    border-bottom: 2px solid #c9d1d9 !important;
+}
+
+button[data-baseweb="tab"][aria-selected="true"] {
+    background-color: #161b22 !important;
+    color: #c9d1d9 !important;
+    font-weight: 600 !important;
+    border: 1px solid #30363d !important;
+    border-bottom: 2px solid #FECB00 !important; /* Suncorp Supernova Yellow accent */
+}
+
+/* ── Metric & Card Styling ── */
+[data-testid="stMetric"] {
+    background-color: #161b22;
+    border: 1px solid #30363d;
+    border-left: 5px solid #009877; /* Suncorp Green highlight */
+    padding: 1.25rem;
+    border-radius: 6px;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
+    transition: transform 0.2s ease;
+}
+
+[data-testid="stMetric"]:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.2);
+}
+
+[data-testid="stMetric"] label {
+    color: #8b949e !important;
+    font-size: 0.85rem !important;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+[data-testid="stMetric"] > div:nth-child(2) {
+    color: #c9d1d9 !important;
+    font-weight: 700 !important;
+}
+
+[data-testid="stMetricValue"] {
+    color: #c9d1d9 !important;
+}
+
+/* ── Dataframe Styling ── */
+.stDataFrame {
+    border: 1px solid #30363d;
+    border-radius: 6px;
+    overflow: hidden;
+    background-color: #161b22;
+}
+
+/* ── Expander Styling ── */
+.streamlit-expanderHeader {
+    background-color: #161b22 !important;
+    color: #c9d1d9 !important;
+    border: 1px solid #30363d !important;
+    border-radius: 6px !important;
+    font-weight: 600 !important;
+}
+
+.streamlit-expanderHeader:hover {
+    border-color: #009877 !important;
+}
+
+/* ── Code Blocks ── */
+.stCodeBlock {
+    border-radius: 6px;
+    border: 1px solid #30363d;
+    background-color: #161b22;
+}
+
+/* ── Checkbox / Info Blocks ── */
+.stAlert {
+    background-color: #161b22 !important;
+    border: 1px solid #30363d !important;
+    color: #c9d1d9 !important;
+}
+
+/* ── Image Presentation Fix (White BG popped onto Dark App) ── */
+[data-testid="stImage"] {
+    background-color: #ffffff;
+    padding: 10px;
+    border-radius: 8px;
+    border: 1px solid #30363d;
+    margin-bottom: 20px;
+}
+
+/* ── Custom HTML overrides ── */
+p, span, div {
+    /* If they are inheriting strict white, enforce grey */
+    color: inherit;
+}
+
