@@ -4,9 +4,10 @@ import logging
 
 logger = logging.getLogger(__name__)
 
+
 def generate_mock_data():
     """Generates synthetic insurance policy and claim files for testing.
-    
+
     Creates a mock policy document and two sample claims representing different
     adjudication scenarios (a clear approval and an ambiguous escalation).
     """

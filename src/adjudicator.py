@@ -10,11 +10,12 @@ from src.reranker import rerank_chunks
 
 logger = logging.getLogger(__name__)
 
-# Define Data Models
+
 class Decision(str, Enum):
     APPROVE = "Approve"
     DENY = "Deny"
     ESCALATE = "Escalate"
+
 
 class AdjudicationResult(BaseModel):
     decision: Decision
@@ -71,16 +72,16 @@ def evaluate_claim_from_dict(claim_data: dict) -> AdjudicationResult:
         policy_context = "\n\n---\n\n".join(top_2_chunks)
 
         # 3. Construct prompt
-        prompt = f"""You are an expert insurance claims adjudicator. Given the following insurance policy excerpts and a claim description, determine whether the claim should be Approved, Denied, or Escalated.
-        
-Policy Context:
-{policy_context}
-
-Claim Data:
-{json.dumps(claim_data, indent=2)}
-
-Evaluate the claim accurately based only on the policy context provided. If you do not have enough specific information, Escalate. Provide reasoning and cite the specific policy clause that supports your decision.
-"""
+        prompt = (
+            "You are an expert insurance claims adjudicator. "
+            "Given the following insurance policy excerpts and a claim description, "
+            "determine whether the claim should be Approved, Denied, or Escalated.\n"
+            f"\nPolicy Context:\n{policy_context}"
+            f"\nClaim Data:\n{json.dumps(claim_data, indent=2)}"
+            "\n\nEvaluate the claim accurately based only on the policy context provided. "
+            "If you do not have enough specific information, Escalate. "
+            "Provide reasoning and cite the specific policy clause that supports your decision."
+        )
 
         # Save prompt to artifact
         if not os.path.exists("mlruns_artifacts"):

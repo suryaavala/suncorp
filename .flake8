@@ -1,0 +1,8 @@
+[flake8]
+max-line-length = 120
+# E203: whitespace before ':', caused by black formatting slices - intentional
+# E501 violations in mock_data.py are inside multi-line policy string literals,
+# not logic code - wrapping them would break readability of the document content.
+per-file-ignores =
+    src/mock_data.py:E501
+    src/vector_store.py:E203

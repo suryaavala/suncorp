@@ -1,11 +1,11 @@
 import json
 from google import genai
-from src.adjudicator import evaluate_claim_from_dict, AdjudicationResult
+from src.adjudicator import evaluate_claim_from_dict
 
 
 def test_eval_ragas():
     """Evaluates the adjudicator using an LLM-as-a-judge approach.
-    
+
     Runs the adjudicator and uses Gemini to verify whether the cited
     policy clause logically supports the system's decision.
     """
@@ -22,10 +22,10 @@ def test_eval_ragas():
     ), f"Expected high confidence, got {result.confidence_score}"
 
     # 3. Use an LLM to evaluate if the cited policy clause makes sense for the claim
-    prompt = f"""You are a strict evaluation judge. 
+    prompt = f"""You are a strict evaluation judge.
     A user submitted this claim: {claim_data['description']}
     The automated system cited this clause to approve it: {result.cited_policy_clause}
-    
+
     Does the cited clause explicitly cover the event described in the claim? Reply ONLY with 'YES' or 'NO'.
     """
 
