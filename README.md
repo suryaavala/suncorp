@@ -64,3 +64,7 @@ make logs
 # Stop and remove the Docker containers
 make down
 ```
+
+## 6. Roadmap & Scaling
+
+For the enterprise target-state architecture, production deployment roadmap, and security/compliance guardrails, see [docs/FUTURE.md](docs/FUTURE.md).
