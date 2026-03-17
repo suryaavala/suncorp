@@ -24,57 +24,25 @@ css_path = Path(__file__).parent / ".style.css"
 if css_path.exists():
     st.markdown(f"<style>{css_path.read_text()}</style>", unsafe_allow_html=True)
 
-# ── Sticky Top Navbar ──────────────────────────────────────────
-# Inject Glassmorphism Container + Scroll Listener
-st.markdown(
-    """
-    <div id="sticky-nav" class="nav-container">
-        <div class="nav-logo">⚡ Suncorp Tech Showcase</div>
-    </div>
-    <script>
-        const nav = window.parent.document.querySelector('.nav-container');
-        window.parent.addEventListener('scroll', () => {
-            if (window.parent.scrollY > 50) {
-                nav.classList.add('scrolled');
-            } else {
-                nav.classList.remove('scrolled');
-            }
-        });
-    </script>
-    """,
-    unsafe_allow_html=True
-)
-
+# ── Slide Definitions ─────────────────────────────────────────
 SLIDES = [
-    "1. Title",
-    "2. Background & Goal",
-    "3. Exploratory Data Analysis",
-    "4. Retrieval & Re-ranking Deep Dive",
-    "5. Implementation & Architecture",
-    "6. Project Outcomes",
-    "7. Future State",
+    "Title",
+    "Background & Goal",
+    "Exploratory Data Analysis",
+    "Retrieval & Re-ranking",
+    "Implementation",
+    "Outcomes",
+    "Future State",
 ]
 
-# Initialize slide state
-if "current_slide" not in st.session_state:
-    st.session_state.current_slide = SLIDES[0]
-
-# Navigation Buttons (Positioned to align with the nav-container)
-# Using a unique prefix 'navbar_btn_v2_' to avoid any cached key conflicts
-nav_cols = st.columns([1.5] + [1] * (len(SLIDES) - 1))
-for i, s in enumerate(SLIDES):
-    with nav_cols[i]:
-        label = s.split(". ")[1] if ". " in s else s
-        if st.button(
-            label, 
-            key=f"navbar_btn_v3_{i}", 
-            use_container_width=True,
-            type="primary" if st.session_state.current_slide == s else "secondary"
-        ):
-            st.session_state.current_slide = s
-            st.rerun()
-
-slide = st.session_state.current_slide
+# ── Navigation (horizontal radio in a sticky bar) ────────────
+slide = st.radio(
+    "Navigation",
+    SLIDES,
+    horizontal=True,
+    label_visibility="collapsed",
+    key="slide_nav",
+)
 
 # ── Assets Path ──────────────────────────────────────────────────
 ASSETS = Path(__file__).parent / "assets"
@@ -82,7 +50,7 @@ ASSETS = Path(__file__).parent / "assets"
 # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 # SLIDE 1: Title
 # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-if slide == "1. Title":
+if slide == "Title":
     title_img = ASSETS / "title_bg.png"
     if title_img.exists():
         st.image(str(title_img), width="stretch")
@@ -110,7 +78,7 @@ if slide == "1. Title":
 # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 # SLIDE 2: Background & Goal
 # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-elif slide == "2. Background & Goal":
+elif slide == "Background & Goal":
     st.title("Background & Goal")
     st.markdown("---")
 
@@ -203,7 +171,7 @@ elif slide == "2. Background & Goal":
 # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 # SLIDE 3: Exploratory Data Analysis
 # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-elif slide == "3. Exploratory Data Analysis":
+elif slide == "Exploratory Data Analysis":
     st.title("Exploratory Data Analysis")
     st.markdown("---")
 
@@ -266,7 +234,7 @@ Return output as valid JSON matching AdjudicationResult schema.
 # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 # SLIDE 4: Retrieval & Re-ranking Deep Dive
 # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-elif slide == "4. Retrieval & Re-ranking Deep Dive":
+elif slide == "Retrieval & Re-ranking":
     st.title("Retrieval & Re-ranking Deep Dive")
     st.markdown("---")
 
@@ -318,7 +286,7 @@ elif slide == "4. Retrieval & Re-ranking Deep Dive":
 # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 # SLIDE 5: Implementation & Architecture
 # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-elif slide == "5. Implementation & Architecture":
+elif slide == "Implementation":
     st.title("Implementation & Architecture")
     st.markdown("---")
 
@@ -434,7 +402,7 @@ class AdjudicationResult(BaseModel):
 # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 # SLIDE 6: Project Outcomes
 # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-elif slide == "6. Project Outcomes":
+elif slide == "Outcomes":
     st.title("Project Outcomes")
     st.markdown("---")
 
@@ -532,7 +500,7 @@ elif slide == "6. Project Outcomes":
 # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 # SLIDE 7: Future State & Scaling
 # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-elif slide == "7. Future State":
+elif slide == "Future State":
     st.title("Future State & Scaling")
     st.markdown("---")
 
