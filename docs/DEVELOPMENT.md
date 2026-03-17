@@ -158,7 +158,7 @@ python -c "from sentence_transformers import CrossEncoder; CrossEncoder('cross-e
 
 ### Modifying the AI's Behavior
 
-The system prompt that governs every adjudication decision is defined as a string literal in [`src/adjudicator.py`](src/adjudicator.py), inside the `evaluate_claim_from_dict` function (around line 75). The prompt is constructed using Python string concatenation:
+The system prompt that governs every adjudication decision is defined as a string literal in [`src/adjudicator.py`](../src/adjudicator.py), inside the `evaluate_claim_from_dict` function (around line 75). The prompt is constructed using Python string concatenation:
 
 ```python
 prompt = (
