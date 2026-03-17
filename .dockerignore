@@ -1,0 +1,8 @@
+__pycache__
+.venv
+.git
+*.sqlite3
+notebooks/
+tests/
+chroma_db/
+.env

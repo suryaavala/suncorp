@@ -38,3 +38,21 @@ curl -X POST http://localhost:8000/adjudicate \
      -H "Content-Type: application/json" \
      -d @data/claim_1.json
 ```
+
+## 5. Deployment
+
+To run the application using Docker, ensure that you have provided your `GEMINI_API_KEY` in a local `.env` file. You can then use the provided `Makefile` commands for simplified orchestration:
+
+```bash
+# Build the Docker image
+make build
+
+# Start the Docker containers in the background
+make up
+
+# View the application logs
+make logs
+
+# Stop and remove the Docker containers
+make down
+```
