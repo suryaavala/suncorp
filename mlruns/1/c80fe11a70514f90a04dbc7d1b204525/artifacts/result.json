@@ -1,0 +1,6 @@
+{
+  "decision": "Escalate",
+  "confidence_score": 0.9,
+  "reasoning": "The claim describes damage caused by a tree falling on the roof during a storm, which is an insured event under the 'Roof Leaks' section. However, the policy explicitly excludes damage caused by a roof that has not been properly maintained or is in a state of disrepair prior to the incident. The provided claim data does not contain information regarding the roof's maintenance status, which is critical for a definitive approval or denial.",
+  "cited_policy_clause": "3. Roof Leaks; 3.1 Exclusions for Roof Leaks"
+}

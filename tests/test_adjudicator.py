@@ -15,8 +15,10 @@ def test_api_timeout_handling():
         "claim_type": "Fire"
     }
 
-    # We mock the entire `genai.Client` to raise an Exception when embedding is called
-    with patch("src.adjudicator.genai.Client") as mock_client:
+    # We mock the entire `genai.Client` to raise an Exception when embedding is called,
+    # and we also mock `rerank_chunks` just in case the pipeline gets that far.
+    with patch("src.adjudicator.genai.Client") as mock_client, \
+         patch("src.adjudicator.rerank_chunks") as mock_rerank_chunks:
         mock_instance = mock_client.return_value
         
         # Simulate a 504 Gateway Timeout or similar API Error when embeddings are requested
