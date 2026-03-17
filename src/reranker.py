@@ -6,16 +6,15 @@ reranker_model = CrossEncoder("cross-encoder/ms-marco-MiniLM-L-6-v2")
 
 
 def rerank_chunks(query: str, chunks: list[str], top_k: int = 2) -> list[str]:
-    """
-    Re-ranks a list of text chunks based on their relevance to the query using a Cross-Encoder.
+    """Re-ranks a list of text chunks based on their relevance to the query.
 
     Args:
-        query: The user's claim description.
-        chunks: A list of policy chunks retrieved from the vector store.
-        top_k: The number of top chunks to return.
+        query (str): The user's claim description.
+        chunks (list[str]): A list of policy chunks retrieved from the vector store.
+        top_k (int, optional): The number of top chunks to return. Defaults to 2.
 
     Returns:
-        A list of the `top_k` most relevant chunks.
+        list[str]: A list of the `top_k` most relevant chunks.
     """
     if not chunks:
         return []

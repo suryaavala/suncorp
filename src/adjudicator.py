@@ -1,4 +1,5 @@
 import json
+import logging
 from enum import Enum
 from pydantic import BaseModel, Field
 import mlflow
@@ -7,8 +8,9 @@ from google import genai
 from src.vector_store import ChromaVectorStore
 from src.reranker import rerank_chunks
 
+logger = logging.getLogger(__name__)
 
-# Define Data Models
+
 class Decision(str, Enum):
     APPROVE = "Approve"
     DENY = "Deny"
@@ -23,12 +25,18 @@ class AdjudicationResult(BaseModel):
 
 
 def evaluate_claim_from_dict(claim_data: dict) -> AdjudicationResult:
-    """Evaluates an insurance claim from a dictionary based on the policy manual, tracked via MLflow."""
+    """Evaluates an insurance claim against the policy manual using a LLM and MLflow tracking.
+
+    Args:
+        claim_data (dict): A dictionary containing the claim details (description, type, etc.).
+
+    Returns:
+        AdjudicationResult: A structured object containing the decision, confidence score, reasoning, and cited clause.
+    """
     mlflow.set_experiment("Policy_Adjudication")
 
     with mlflow.start_run():
         claim_description = claim_data.get("description", "")
-
         ai_client = genai.Client()
         embedding_model = os.getenv("EMBEDDING_MODEL", "gemini-embedding-001")
         llm_model = os.getenv("LLM_MODEL", "gemini-2.5-flash")
@@ -64,16 +72,16 @@ def evaluate_claim_from_dict(claim_data: dict) -> AdjudicationResult:
         policy_context = "\n\n---\n\n".join(top_2_chunks)
 
         # 3. Construct prompt
-        prompt = f"""You are an expert insurance claims adjudicator. Given the following insurance policy excerpts and a claim description, determine whether the claim should be Approved, Denied, or Escalated.
-        
-Policy Context:
-{policy_context}
-
-Claim Data:
-{json.dumps(claim_data, indent=2)}
-
-Evaluate the claim accurately based only on the policy context provided. If you do not have enough specific information, Escalate. Provide reasoning and cite the specific policy clause that supports your decision.
-"""
+        prompt = (
+            "You are an expert insurance claims adjudicator. "
+            "Given the following insurance policy excerpts and a claim description, "
+            "determine whether the claim should be Approved, Denied, or Escalated.\n"
+            f"\nPolicy Context:\n{policy_context}"
+            f"\nClaim Data:\n{json.dumps(claim_data, indent=2)}"
+            "\n\nEvaluate the claim accurately based only on the policy context provided. "
+            "If you do not have enough specific information, Escalate. "
+            "Provide reasoning and cite the specific policy clause that supports your decision."
+        )
 
         # Save prompt to artifact
         if not os.path.exists("mlruns_artifacts"):
@@ -106,10 +114,11 @@ Evaluate the claim accurately based only on the policy context provided. If you 
 
 if __name__ == "__main__":
     import sys
+    logging.basicConfig(level=logging.INFO)
 
     if len(sys.argv) > 1:
         claim_path = sys.argv[1]
         with open(claim_path, "r") as f:
             claim_data = json.load(f)
         res = evaluate_claim_from_dict(claim_data)
-        print(res.model_dump_json(indent=2))
+        logger.info("Evaluation Result:\n%s", res.model_dump_json(indent=2))

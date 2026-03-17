@@ -16,8 +16,16 @@ class ClaimRequest(BaseModel):
 
 @app.post("/adjudicate", response_model=AdjudicationResult)
 async def adjudicate_claim(claim: ClaimRequest) -> AdjudicationResult:
-    """
-    Evaluates an insurance claim and returns the adjudication decision.
+    """Evaluates an insurance claim and returns the adjudication decision.
+
+    Args:
+        claim (ClaimRequest): The incoming claim data payload.
+
+    Returns:
+        AdjudicationResult: The computed AI decision and policy citation.
+
+    Raises:
+        HTTPException: If the LLM provider fails or a general processing error occurs.
     """
     try:
         claim_dict = claim.model_dump()
@@ -33,7 +41,9 @@ async def adjudicate_claim(claim: ClaimRequest) -> AdjudicationResult:
 
 @app.get("/health")
 async def health_check() -> dict:
-    """
-    Infrastructure monitoring endpoint.
+    """Infrastructure monitoring endpoint.
+
+    Returns:
+        dict: A simple status dictionary confirming the API is active.
     """
     return {"status": "ok"}

@@ -1,13 +1,13 @@
 import pytest
-from unittest.mock import patch, MagicMock
-from google.genai.errors import APIError
+from unittest.mock import patch
 from src.adjudicator import evaluate_claim_from_dict
 
 
 def test_api_timeout_handling():
-    """
-    Mocks the Google GenAI API to simulate a timeout/error and
-    verifies the adjudicator handles it (either by raising a specific error or failing fast).
+    """Verifies the adjudicator handles GenAI API timeouts gracefully.
+
+    Mocks the Google GenAI Client and the reranker to force a timeout Exception
+    and asserts that the pipeline bubbles up the error correctly.
     """
     claim_payload = {
         "claim_id": "C-ERR",
@@ -20,7 +20,7 @@ def test_api_timeout_handling():
     # and we also mock `rerank_chunks` just in case the pipeline gets that far.
     with patch("src.adjudicator.genai.Client") as mock_client, patch(
         "src.adjudicator.rerank_chunks"
-    ) as mock_rerank_chunks:
+    ):
         mock_instance = mock_client.return_value
 
         # Simulate a 504 Gateway Timeout or similar API Error when embeddings are requested

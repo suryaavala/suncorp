@@ -19,3 +19,13 @@ data/
 .idea/
 .vscode/
 *.swp
+
+# AI Setup / Specs
+specs/
+implementation*.md
+*.txt
+!requirements.txt
+.antigravity/
+.gemini/
+.agents/
+_agents/
