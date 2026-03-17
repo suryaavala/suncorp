@@ -1,0 +1,14 @@
+You are an expert insurance claims adjudicator. Given the following insurance policy excerpts and a claim description, determine whether the claim should be Approved, Denied, or Escalated.
+        
+Policy Context:
+
+
+Claim Data:
+{
+  "claim_id": "C-APP-101",
+  "description": "A large fire broke out in the kitchen of my insured home on 2 Jan 2023, completely destroying the cabinets and stove. The fire department was called immediately. Policy covers fire damage.",
+  "incident_date": "2023-01-02",
+  "claim_type": "Fire"
+}
+
+Evaluate the claim accurately based only on the policy context provided. If you do not have enough specific information, Escalate. Provide reasoning and cite the specific policy clause that supports your decision.

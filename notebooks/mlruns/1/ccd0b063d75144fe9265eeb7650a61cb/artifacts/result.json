@@ -1,0 +1,6 @@
+{
+  "decision": "Escalate",
+  "confidence_score": 1,
+  "reasoning": "No policy context was provided to evaluate the claim against. Without specific policy details regarding fire damage coverage, exclusions, or conditions, a definitive decision to approve or deny cannot be made.",
+  "cited_policy_clause": "N/A - No policy context provided for evaluation."
+}

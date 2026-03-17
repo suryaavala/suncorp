@@ -1,0 +1,14 @@
+You are an expert insurance claims adjudicator. Given the following insurance policy excerpts and a claim description, determine whether the claim should be Approved, Denied, or Escalated.
+        
+Policy Context:
+
+
+Claim Data:
+{
+  "claim_id": "C-GRY-109",
+  "description": "We found water damage in the basement. It looks like it might have been slowly leaking from a pipe behind the drywall for months, or maybe it was from the heavy rain last week. It's hard to tell the exact source.",
+  "incident_date": "2023-03-010",
+  "claim_type": "Water"
+}
+
+Evaluate the claim accurately based only on the policy context provided. If you do not have enough specific information, Escalate. Provide reasoning and cite the specific policy clause that supports your decision.

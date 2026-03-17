@@ -1,0 +1,6 @@
+{
+  "decision": "Escalate",
+  "confidence_score": 1,
+  "reasoning": "The policy context was not provided, making it impossible to evaluate the claim against specific coverage terms, exclusions, or conditions. Without policy details, a definitive approval or denial cannot be made.",
+  "cited_policy_clause": "No specific clause can be cited as the policy context is missing."
+}
