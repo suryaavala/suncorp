@@ -61,5 +61,6 @@ flowchart TD
 4. **Knowledge Store (`src/vector_store.py`)** -> Leverages Google's `gemini-embedding-001` to vectorize text logic. It uses the `VectorStore` Abstract Base Class, currently implementing the `ChromaVectorStore` concrete class for portability, but acts as a seam to swap in a scalable datastore (e.g. Databricks Vector Search or generic SQL via `pgvector`) in less than 20 lines of code.
 
 ## Cloud Target & Extension
-* **Deployment:** This service evaluates perfectly inside a container. The `uvicorn` entry point can be effortlessly mounted to GCP Cloud Run or Azure Container Apps in a completely serverless manner.
-* **Testing:** Using `FastAPI.testclient` allows the CI pipeline to perfectly simulate incoming application load without needing real compute loops, running on GitHub Linux VMs natively.
+* **Cloud Deployment:** This service evaluates perfectly inside a container. The `uvicorn` entry point can be effortlessly mounted to GCP Cloud Run or Azure Container Apps in a completely serverless manner.
+* **Continuous Integration:** Using `FastAPI.testclient` allows the CI pipeline to perfectly simulate incoming application load without needing real compute loops, running on GitHub Linux VMs natively.
+
